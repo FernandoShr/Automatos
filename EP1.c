@@ -113,6 +113,16 @@ int percorre(char *palavra, char estados[SIZE][TAMPALAVRA],
   return 0;
 }
 
+int tamArr(char array[])
+{
+  int tam = 0;
+  while(array[tam] != '\0')
+  {
+    tam++;
+  }
+  return tam;
+}
+
 void constroi(char *palavra, char estados[SIZE][TAMPALAVRA],
               char a[SIZE][SIZE], char b[SIZE][SIZE]) {
 
@@ -139,18 +149,55 @@ void constroi(char *palavra, char estados[SIZE][TAMPALAVRA],
   tamPalavra = tamanhoPalavra(palavra); // tam = 5
   j = tamPalavra;                       // j = 5
 
+// Copia o estados para o a
   for (int i = 1; i <= tamPalavra; i++) {
+    for(int k = 0; k < tamArr(estados[i]); k++)
+    {
+      a[i][k] = estados[i][k];
+      if(tamArr(estados[i]) - k == 1)
+      {
+        a[i][tamArr(estados[i])] = 'a';
+        a[i][tamArr(estados[i])] = '\0'; // Acrescenta "\0" no final
+      }
+    }
 
-    for (int k = 0; k < (tamPalavra + 1) - j; k++) {
-      a[i][k] = palavra[k];
-    }
-    if(i == tamPalavra){
-      continue;
-    }else{
-      a[i][tamPalavra +1 -j] =  'a';
-    }
-    j--;
   }
+
+// Só para printar a matriz A
+/*
+  for (int i = 1; i <= tamPalavra; i++) {
+    for(int k = 0; k < tamArr(estados[i]) + 1; k++)
+    {
+      printf("%c", a[i][k]);
+    }
+    printf("\n");
+  }
+  */
+
+  // Copia o estados para o b
+  for (int i = 1; i <= tamPalavra; i++) {
+    for(int k = 0; k < tamArr(estados[i]); k++)
+    {
+      b[i][k] = estados[i][k];
+      if(tamArr(estados[i]) - k == 1)
+      {
+        b[i][tamArr(estados[i])] = 'b'; // Acrescenta "b" no final
+        b[i][tamArr(estados[i])] = '\0'; // Acrescenta "\0" no final
+      }
+    }
+
+  }
+
+// Só para printar a matriz B
+/*
+  for (int i = 1; i <= tamPalavra; i++) {
+    for(int k = 0; k < tamArr(estados[i]) + 1; k++)
+    {
+      printf("%c", b[i][k]);
+    }
+    printf("\n");
+  }
+*/
 
   // Constroi resposta para 'b'
   
@@ -172,37 +219,34 @@ void constroi(char *palavra, char estados[SIZE][TAMPALAVRA],
     j--;
   }
   
-  //
-
-
-  
   int qtdA = sizeof(a) / sizeof(a[0]);
-  int qtdB = sizeof(b[0]) / sizeof(b[0][0]);
+  // int qtdB = sizeof(b[0]) / sizeof(b[0][0]);
+  int qtdB = tamArr(b[0]);
   int linhasEstados = tamPalavra + 1; 
   int colunasEstados = TAMPALAVRA;
 
 
   int teste = arrayEstaNaMatriz(estados, linhasEstados, colunasEstados, b[0], qtdB);
   
-  printf("%d", teste);
+  printf("TESTE: %d\n", teste);
   
   printf("Estados:\n");
-  for (int i = 0; i < SIZE; i++) {
-    for (int j = 0; j < TAMPALAVRA; j++) {
+  for (int i = 0; i < tamanhoPalavra(palavra)+1; i++) {
+    for (int j = 0; j < tamanhoPalavra(palavra); j++) {
       printf("%c", estados[i][j]);        
     }
     printf("\n");
   }
   printf("a:\n");
-  for (int i = 0; i < SIZE; i++) {
-    for (int j = 0; j < SIZE; j++) {
+  for (int i = 0; i < tamanhoPalavra(palavra)+1; i++) {
+    for (int j = 0; j < tamanhoPalavra(palavra)+1; j++) {
       printf("%c", a[i][j]);        
     }
     printf("\n");
   }
   printf("b:\n");
-  for (int i = 0; i < SIZE; i++) {
-    for (int j = 0; j < SIZE; j++) {
+  for (int i = 0; i < tamanhoPalavra(palavra); i++) {
+    for (int j = 0; j < tamanhoPalavra(palavra); j++) {
       printf("%c", b[i][j]);        
     }
     printf("\n");
